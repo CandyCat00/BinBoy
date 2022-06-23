@@ -1,5 +1,5 @@
-from items.Objects import objects
-from items.Cup import cup
+from Items import Objects
+from Items import Cup
 
 class inventory():
     def __init__(self):

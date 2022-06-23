@@ -1,5 +1,7 @@
 import pygame
 import os
+from Items import Inventory
+from Items import Cup
 
 #Window display settings
 pygame.display.set_caption("Binboy")
@@ -23,6 +25,10 @@ RUN_FRAME = 0
 I = 0
 LEVEL_START = 0
 END_OF_LEVEL = WIDTH * 2
+
+# Set the colo image
+COLO_CUP = pygame.image.load(os.path.join('assets', 'colo_cup_1.png'))
+COLO_CUP = pygame.transform.scale(COLO_CUP, (25, 75))
 
 #Set the main character image
 BINBOY_IDOL = pygame.image.load(os.path.join('assets', 'binboyTEST.png'))
@@ -78,6 +84,11 @@ def draw_window(binboy, I):
     
     pygame.display.update()
 
+# should draw the different bits of trash
+def draw_trash(inventory):
+    
+    pass
+
 #tells the rest of the code what the user wants binboy to do and moves him
 def movement(binboy):
     global JUMP
@@ -109,6 +120,7 @@ def movement(binboy):
 
 def main():
     I = 0
+    bag = Inventory.inventory
     binboy = pygame.Rect(100, GROUND.y - 140, 100, 150)
     clock = pygame.time.Clock()
     run = True
@@ -126,6 +138,7 @@ def main():
             I -=VEL_X
             binboy.x += VEL_X
 
+        draw_trash(bag)
         draw_window(binboy, I)
         movement(binboy)
     

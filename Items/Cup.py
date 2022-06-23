@@ -1,4 +1,4 @@
-from Objects import objects
+from Items.Objects import objects
 
 class trash(objects):
     def __init__(self):
@@ -16,3 +16,7 @@ class trash(objects):
 
     def set_name(self, name):
         self.name = name
+
+    def show_trash(self,display,position):
+        
+        pass
