@@ -1,11 +1,12 @@
 import pygame
 import gameStates
 import graphics
-import main
+from collisions import Collision
+from platforms import Platforms
 
 class Chara:
-    VEL_X = 5
-    VEL_Y = 20
+    VEL_X = 4
+    VEL_Y = 10
     JUMP = False
     MOVE_L = False
     MOVE_R = False
@@ -24,15 +25,19 @@ class Chara:
             Chara.MOVE_L = False
             Chara.MOVE_R = False
 
+        Collision.checkXcolli()
+
         if Chara.JUMP is False and keys_pressed[pygame.K_SPACE]:
             Chara.JUMP = True
 
         if Chara.JUMP:
             binboy.y -= Chara.VEL_Y
             Chara.VEL_Y -= 1
-            if Chara.VEL_Y < -20:
+            Collision.checkYcolli()
+            if Chara.VEL_Y < -10:
                 Chara.JUMP = False
-                Chara.VEL_Y = 20
+                Chara.VEL_Y = 10
+
 
 class Screen:
     SCROLL_INDEX = 0
@@ -43,6 +48,10 @@ class Screen:
         if Chara.MOVE_R and binboy.x - Chara.VEL_X > graphics.Window.WIDTH - 500 and Screen.SCROLL_INDEX != gameStates.GameState.END_OF_LEVEL:
             Screen.SCROLL_INDEX += Screen.VEL_X
             binboy.x -= Chara.VEL_X
+            for plat in Platforms.PLATFORMS:
+                plat.x -= Chara.VEL_X
         if Chara.MOVE_L and binboy.x - Chara.VEL_X < 300 and Screen.SCROLL_INDEX != gameStates.GameState.LEVEL_START:
             Screen.SCROLL_INDEX -= Screen.VEL_X
             binboy.x += Chara.VEL_X
+            for plat in Platforms.PLATFORMS:
+                plat.x += Chara.VEL_X

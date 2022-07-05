@@ -1,15 +1,17 @@
+from platform import platform
 from tokenize import PseudoToken
 import pygame
 import os
 import movement
+import platforms
 
 class Binboy:
-    BINBOY_POS = pygame.Rect(100, 438 - 140, 100, 150)
+    BINBOY_POS = pygame.Rect(100, 438 - 70, 50, 75)
     RUN_FRAME = 0
 
     #Set the movement.Chara character image
     BINBOY_IDOL = pygame.image.load(os.path.join('assets', 'binboyTEST.png'))
-    BINBOY_IDOL = pygame.transform.scale(BINBOY_IDOL, (100, 150))
+    BINBOY_IDOL = pygame.transform.scale(BINBOY_IDOL, (50, 75))
 
     #The character images when moving right
     BINBOY_RIGHT = [None]*10
@@ -17,7 +19,7 @@ class Binboy:
         BINBOY_RIGHT[rightIndex - 1] = pygame.image.load(os.path.join('assets', 'binboy_right_' + str(rightIndex) + '.png'))
         rightIndex += 1
     for rightIndex in range(1, 11):
-        BINBOY_RIGHT[rightIndex - 1] = pygame.transform.scale(BINBOY_RIGHT[rightIndex - 1], (120, 150))
+        BINBOY_RIGHT[rightIndex - 1] = pygame.transform.scale(BINBOY_RIGHT[rightIndex - 1], (50, 75))
         rightIndex += 1
 
     #The character images when moving left
@@ -26,7 +28,7 @@ class Binboy:
         BINBOY_LEFT[leftIndex - 1] = pygame.image.load(os.path.join('assets', 'binboy_left_' + str(leftIndex) + '.png'))
         leftIndex += 1
     for leftIndex in range(1, 11):
-        BINBOY_LEFT[leftIndex - 1] = pygame.transform.scale(BINBOY_LEFT[leftIndex - 1], (120, 150))
+        BINBOY_LEFT[leftIndex - 1] = pygame.transform.scale(BINBOY_LEFT[leftIndex - 1], (60, 75))
         leftIndex += 1
 
     def draw_binboy(self):
@@ -62,7 +64,10 @@ class Window:
         Window.WIN.fill(Window.SKY)
         pygame.draw.rect(Window.WIN, Window.BACKGROUND, pygame.Rect(Window.WIDTH - SCROLL_INDEX, 0, Window.WIDTH, Window.HEIGHT))
         pygame.draw.rect(Window.WIN, Window.GRASS, Window.GROUND)
+
         Binboy.draw_binboy(Binboy)
+        for plat in platforms.Platforms.PLATFORMS:
+            pygame.draw.rect(Window.WIN, Window.GRASS, plat)
         
         pygame.display.update()
     

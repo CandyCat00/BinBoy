@@ -1,6 +1,6 @@
 import graphics
 import movement
-import platforms
+from platforms import Platforms
 
 class GameState:
     def __init__(self):
@@ -13,20 +13,25 @@ class GameState:
 
     #Variables that don't are used in levels, but don't change
     LEVEL_START = 0
-    GOAL = graphics.Window.WIDTH - (graphics.Window.WIDTH/8) * 3
+    GOAL = graphics.Window.WIDTH - (graphics.Window.WIDTH/8) * 2
 
     #this variable tells us how far the level will scroll and can be changed.
     #Zero means it will now scroll
     END_OF_LEVEL = 0
     
     def level_1(self):
-        GameState.END_OF_LEVEL = graphics.Window.WIDTH * 2
+        GameState.END_OF_LEVEL = graphics.Window.WIDTH
+        
+        if (len(Platforms.PLATFORMS) == 0):
+            Platforms.createPlatforme()
+
         graphics.Window.draw_level_1(graphics.Window, movement.Screen.SCROLL_INDEX)
         movement.Chara.movement(movement.Chara, graphics.Binboy.BINBOY_POS)
         movement.Screen.scroll(movement.Screen, graphics.Binboy.BINBOY_POS)
 
         if (graphics.Binboy.BINBOY_POS.x >= GameState.GOAL):
             GameState.LEVEL += 1
+            Platforms.PLATFORMS.clear()
             GameState.BONUS = True
         
     def bonus_level(self):
