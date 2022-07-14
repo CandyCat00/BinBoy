@@ -1,2 +1,2 @@
 # BinBoy
-Cleaning the town for a better tomorrow.
+A recycled hero, cleaning the town for a better tomorrow.
