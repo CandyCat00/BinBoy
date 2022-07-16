@@ -9,6 +9,12 @@ import maps
 from inventory import Inventory
 from music import Music
 
+######################################################################
+# This file is where all the different screens of the game are stored.
+# Basically, the game state is just full of different game loops that
+# get called when the screen changes.
+######################################################################
+
 screen = pygame.display.set_mode((graphics.Window.WIDTH,graphics.Window.HEIGHT))
 
 class GameState():
@@ -17,8 +23,9 @@ class GameState():
     GOAL = 1230 #graphics.Window.WIDTH - (graphics.Window.WIDTH/30) * 2
     END_OF_LEVEL = 0
     LEVEL_START = 0
-    LEVEL_2_DONE = False  #this variable tells us how far the level will scroll and can be changed.
-                      #Zero means it will now scroll
+    LEVEL_2_DONE = False
+    FINAL_SCORE =  0
+    FILE = open("scores.txt","a") # ADDED THIS LINE TO OPEN THE FILE
 
     def __init__(self):
         self.state = "main_menu"
@@ -108,6 +115,20 @@ class GameState():
             self.state = "level_2"
             
      
+        pygame.display.update()
+
+    def thanks_message(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        screen.blit(menu.thanks_message,(0,0))
+        if menu.final_button.draw(screen):
+            print("EXIT")
+            pygame.quit()
+            sys.exit()
+
         pygame.display.update()
     
     
@@ -210,12 +231,19 @@ class GameState():
             GameState.CREATE = 1
 
         if Inventory.is_empty():
+            GameState.FINAL_SCORE = graphics.Window.SCORE
             Music.stop()
             GameState.CREATE = 0
             if GameState.LEVEL_2_DONE == False:
                 self.state = "fourth_message" 
-            elif GameState.LEVEL_2_DONE == True:    
-                self.state = "first_message"
+            elif GameState.LEVEL_2_DONE == True:
+                print(f"Your score is {GameState.FINAL_SCORE}\n") # print the score on the terminal                    ADDED
+                GameState.FILE.write(f" {GameState.FINAL_SCORE}\n") # save the score next to the name in the file       ADDED
+                GameState.FILE = open("scores.txt","r") # We read the file now                                          ADDED   
+                print("SCORE LIST:\n")                                                                                  #ADDED
+                for x in GameState.FILE:                                                                                #ADDED
+                    print(x)                                                                                            #ADDED
+                self.state = "thanks_message"
         else:
             graphics.Window.draw_bonus_level(graphics.Window)
             movement.Selection.hover()
@@ -239,31 +267,5 @@ class GameState():
             self.third_message()
         if self.state == "fourth_message":
             self.fourth_message()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   
+        if self.state == "thanks_message":
+            self.thanks_message()

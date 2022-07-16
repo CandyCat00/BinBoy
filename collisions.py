@@ -6,6 +6,11 @@ from platforms import Platforms
 from trash import Trash
 from inventory import Inventory
 
+
+##########################################################################
+# This class holds the instructions for what happens when the character
+# rect comes in contact with any other rectangle.
+##########################################################################
 class Collision:
     x_collision = False
     y_collision = False
@@ -14,6 +19,8 @@ class Collision:
     heigth = 65
     width = 40
 
+    # checks if the character collided with a platform on the left or right.
+    # if they did, block their movement.
     def checkXcolli(new_player_x, binboy):
         Collision.new_player_rect = pygame.Rect(new_player_x,binboy.y,Collision.width, Collision.heigth)
         Collision.x_collision = False
@@ -24,6 +31,8 @@ class Collision:
         if Collision.x_collision == False:
             binboy.x = new_player_x
 
+    # checks if the character collided with a platform above or below them.
+    # if they did, block their movement.
     def checkYcolli(new_player_y, binboy):
         Collision.new_player_rect = pygame.Rect(binboy.x,new_player_y,Collision.width, Collision.heigth)
         Collision.y_collision = False
@@ -40,10 +49,12 @@ class Collision:
         if Collision.y_collision == False:
             binboy.y = new_player_y
 
-    
+    # checks if the character collided with a piece of trash.
+    # if they did, remove it from the screen, add to the score
     def checkTrashColli(binboy):
         Collision.new_player_rect = pygame.Rect(binboy.x, binboy.y, Collision.width, Collision.heigth)
         
+        # 
         for Collision.trash in Trash.BANANAS:
             if Collision.trash.colliderect(Collision.new_player_rect):
                 Trash.BANANAS.remove(Collision.trash)

@@ -1,6 +1,10 @@
 import pygame
 from maps import Maps
 
+##########################################################################
+# This class reads the maps and creates some of the objects on them,
+# including the Platforms, and Player start position among the platforms.
+##########################################################################
 class Platforms:
     PLATFORMS = []
     PLAT_SIZE = 40
@@ -23,6 +27,7 @@ class Platforms:
                 #print(f"x {x}  y{y}")
                 if col == "P":
                     return x
+
     def setPlayerPositionY():
         for row_index,row in enumerate(Maps.LEVEL_1):
             for col_index, col in enumerate(row):

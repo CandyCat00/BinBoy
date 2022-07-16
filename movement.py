@@ -1,4 +1,3 @@
-from turtle import width
 import pygame
 import gameStates
 import graphics
@@ -7,6 +6,12 @@ from platforms import Platforms
 from trash import Trash
 from inventory import Inventory
 
+###################################################################
+# This files holds the movement functions for basically everything
+# that moves, including the character, screen, and the bins we 
+# select when sorting. It is also the file that takes most of the
+# users inputs and makes them work.
+###################################################################
 class Chara:
     VEL_X = 4
     VEL_Y = 8
@@ -15,6 +20,7 @@ class Chara:
     MOVE_R = False
     ACCELERATION = 0.25
 
+    #move the character when the appropriate button is pushed.
     def movement(self, binboy):
     
         Chara.new_player_x = binboy.x
@@ -36,20 +42,30 @@ class Chara:
             Chara.MOVE_L = False
             Chara.MOVE_R = False
         
+        # check the characters location.
+        # If they are coliding with something, cancel their movement.
         Collision.checkXcolli(Chara.new_player_x, binboy)
         Collision.checkYcolli(Chara.new_player_y, binboy)
         Collision.checkTrashColli(binboy)
 
+        #Jump input
         if  keys_pressed[pygame.K_SPACE] and Collision.player_on_ground:
-            Chara.VEL_Y = -7    
+            JUMP = True
+            Chara.VEL_Y = -7
+        else:
+            JUMP = False 
 
 class Screen:
     SCROLL_INDEX = 0
     VEL_X = 5
     Vel_Y = 15
 
+    # moves everything on screen according to the players movement.
     def scroll(self, binboy):
-        if Chara.MOVE_R and binboy.x - Chara.VEL_X > graphics.Window.WIDTH - 500 and Screen.SCROLL_INDEX != gameStates.GameState.END_OF_LEVEL:
+        # if binboy reaches a certain spot on the screen and he is moving right
+        # everything will move left until we reach the end of the level.
+        if (Chara.MOVE_R and binboy.x - Chara.VEL_X > graphics.Window.WIDTH - 500 
+            and Screen.SCROLL_INDEX != gameStates.GameState.END_OF_LEVEL):
             Screen.SCROLL_INDEX += Screen.VEL_X
             binboy.x -= Chara.VEL_X
             for plat in Platforms.PLATFORMS:
@@ -65,6 +81,8 @@ class Screen:
             for trash in Trash.GOAL:
                 trash.x -= Chara.VEL_X 
 
+        # if binboy reaches a certain spot on the screen and he is moving left
+        # everything will move right until we reach the start of the level.
         if Chara.MOVE_L and binboy.x - Chara.VEL_X < 300 and Screen.SCROLL_INDEX != gameStates.GameState.LEVEL_START:
             Screen.SCROLL_INDEX -= Screen.VEL_X
             binboy.x += Chara.VEL_X
@@ -87,6 +105,7 @@ class Selection:
     GLASS_BIN = False
     TRASH_CAN = False
 
+    # If the mouse is hovering over a trash bin, tell graphics to switch the image to open
     def hover():
         cursor = pygame.mouse.get_pos()
         if (cursor[0] in range(graphics.Cans.CAN1.left, graphics.Cans.CAN1.right) and
@@ -113,6 +132,8 @@ class Selection:
         else:
             Selection.GLASS_BIN = False
 
+    # If the user is still hovered over a bin and they click, sort the current item into
+    # the bin and check if it belongs there
     def make_selection():
         if not Selection.TRASH_CAN and not Selection.GLASS_BIN and not Selection.PAPER_BIN and not Selection.PLASTIC_BIN:
             return
